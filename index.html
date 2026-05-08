@@ -8,6 +8,7 @@
       margin: 8px 0;
       display: flex;
       gap: 8px;
+      flex-wrap: wrap;
     }
     button {
       padding: 6px 12px;
@@ -17,9 +18,12 @@
 </head>
 <body>
 
-<video id="player" controls width="100%"
-  preload="metadata">
-</video>
+<video id="player" controls width="100%" preload="metadata"></video>
+
+<div class="controls">
+  <button id="prevVideo">前の動画</button>
+  <button id="nextVideo">次の動画</button>
+</div>
 
 <div class="controls">
   <button id="back3">-3s</button>
@@ -31,25 +35,45 @@
 <script>
 const video = document.getElementById('player');
 
-// 初期動画セット（最新）
-if (window.videoList && videoList.length > 0) {
-  video.src = `video/${videoList[0]}`;
+// 再生リスト
+const list = window.videoList || [];
+let currentIndex = 0;
+
+// 初期セット（最新＝先頭）
+if (list.length > 0) {
+  setVideo(0);
 }
 
-// 再生位置移動ユーティリティ
+function setVideo(index) {
+  if (index < 0) index = 0;
+  if (index >= list.length) index = list.length - 1;
+
+  currentIndex = index;
+  video.src = `video/${list[currentIndex]}`;
+  video.currentTime = 0;
+  video.play();
+}
+
+// 前・次 動画
+document.getElementById('prevVideo').onclick = () => {
+  setVideo(currentIndex - 1);
+};
+
+document.getElementById('nextVideo').onclick = () => {
+  setVideo(currentIndex + 1);
+};
+
+// 再生位置移動
 function seek(deltaSeconds) {
   if (!video.duration || isNaN(video.duration)) return;
 
   let target = video.currentTime + deltaSeconds;
-
-  // 下限・上限のクランプ
   if (target < 0) target = 0;
   if (target > video.duration) target = video.duration;
 
   video.currentTime = target;
 }
 
-// ボタン wiring
 document.getElementById('back3').onclick = () => seek(-3);
 document.getElementById('fwd5').onclick  = () => seek(5);
 document.getElementById('fwd10').onclick = () => seek(10);
@@ -57,4 +81,3 @@ document.getElementById('fwd10').onclick = () => seek(10);
 
 </body>
 </html>
-``
