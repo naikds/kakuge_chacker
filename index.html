@@ -30,6 +30,9 @@
   <button id="prevVideo">前の動画</button>
   <button id="nextVideo">次の動画</button>
 </div>
+<div class="controls">
+  <button id="togglePlay">再生</button>
+</div>
 
 <div class="controls">
   <button id="back10">-10s</button>
@@ -120,6 +123,20 @@ document.getElementById('memoBtn').onclick = () => {
   }
 
   memoArea.value = lines.join('\n');
+};
+
+const toggleBtn = document.getElementById('togglePlay');
+
+// 初期ラベル調整
+video.onplay = () => toggleBtn.textContent = '停止';
+video.onpause = () => toggleBtn.textContent = '再生';
+
+toggleBtn.onclick = () => {
+  if (video.paused) {
+    video.play();
+  } else {
+    video.pause();
+  }
 };
 </script>
 
