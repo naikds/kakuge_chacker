@@ -10,6 +10,12 @@
       gap: 8px;
       flex-wrap: wrap;
     }
+    textarea {
+      width: 100%;
+      height: 160px;
+      margin-top: 8px;
+      font-family: monospace;
+    }
     button {
       padding: 6px 12px;
       font-size: 14px;
@@ -26,20 +32,28 @@
 </div>
 
 <div class="controls">
+  <button id="back10">-10s</button>
+  <button id="back5">-5s</button>
   <button id="back3">-3s</button>
   <button id="fwd5">+5s</button>
   <button id="fwd10">+10s</button>
 </div>
 
-<script src="video/index.js"></script>
+<div class="controls">
+  <button id="memoBtn">メモ</button>
+</div>
+
+<textarea id="memo" placeholder="ここに自由にメモできます"></textarea>
+
+video/index.js
 <script>
 const video = document.getElementById('player');
+const memoArea = document.getElementById('memo');
 
-// 再生リスト
 const list = window.videoList || [];
 let currentIndex = 0;
 
-// 初期セット（最新＝先頭）
+// 初期動画（最新）
 if (list.length > 0) {
   setVideo(0);
 }
@@ -54,29 +68,58 @@ function setVideo(index) {
   video.play();
 }
 
-// 前・次 動画
-document.getElementById('prevVideo').onclick = () => {
-  setVideo(currentIndex - 1);
-};
+// 前後動画ボタン
+document.getElementById('prevVideo').onclick = () => setVideo(currentIndex - 1);
+document.getElementById('nextVideo').onclick = () => setVideo(currentIndex + 1);
 
-document.getElementById('nextVideo').onclick = () => {
-  setVideo(currentIndex + 1);
-};
-
-// 再生位置移動
-function seek(deltaSeconds) {
+// 再生位置操作
+function seek(delta) {
   if (!video.duration || isNaN(video.duration)) return;
 
-  let target = video.currentTime + deltaSeconds;
-  if (target < 0) target = 0;
-  if (target > video.duration) target = video.duration;
-
-  video.currentTime = target;
+  let t = video.currentTime + delta;
+  if (t < 0) t = 0;
+  if (t > video.duration) t = video.duration;
+  video.currentTime = t;
 }
 
-document.getElementById('back3').onclick = () => seek(-3);
-document.getElementById('fwd5').onclick  = () => seek(5);
-document.getElementById('fwd10').onclick = () => seek(10);
+document.getElementById('back10').onclick = () => seek(-10);
+document.getElementById('back5').onclick  = () => seek(-5);
+document.getElementById('back3').onclick  = () => seek(-3);
+document.getElementById('fwd5').onclick   = () => seek(5);
+document.getElementById('fwd10').onclick  = () => seek(10);
+
+// mm:ss 形式
+function formatTime(sec) {
+  const m = Math.floor(sec / 60).toString().padStart(2, '0');
+  const s = Math.floor(sec % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+// メモ追加
+document.getElementById('memoBtn').onclick = () => {
+  const filename = list[currentIndex];
+  const time = formatTime(video.currentTime);
+
+  const lines = memoArea.value.split('\n');
+  let inserted = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].trim() === filename) {
+      // 次の行に時間を挿入
+      lines.splice(i + 1, 0, time);
+      inserted = true;
+      break;
+    }
+  }
+
+  if (!inserted) {
+    if (memoArea.value.trim() !== '') lines.push('');
+    lines.push(filename);
+    lines.push(time);
+  }
+
+  memoArea.value = lines.join('\n');
+};
 </script>
 
 </body>
