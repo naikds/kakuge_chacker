@@ -3,20 +3,58 @@
 <head>
   <meta charset="utf-8">
   <title>Video Viewer</title>
+  <style>
+    .controls {
+      margin: 8px 0;
+      display: flex;
+      gap: 8px;
+    }
+    button {
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
 
-<video id="player" controls width="100%"></video>
+<video id="player" controls width="100%"
+  preload="metadata">
+</video>
+
+<div class="controls">
+  <button id="back3">-3s</button>
+  <button id="fwd5">+5s</button>
+  <button id="fwd10">+10s</button>
+</div>
 
 <script src="video/index.js"></script>
 <script>
 const video = document.getElementById('player');
 
+// 初期動画セット（最新）
 if (window.videoList && videoList.length > 0) {
-  // 名前降順なので先頭＝最新
   video.src = `video/${videoList[0]}`;
 }
+
+// 再生位置移動ユーティリティ
+function seek(deltaSeconds) {
+  if (!video.duration || isNaN(video.duration)) return;
+
+  let target = video.currentTime + deltaSeconds;
+
+  // 下限・上限のクランプ
+  if (target < 0) target = 0;
+  if (target > video.duration) target = video.duration;
+
+  video.currentTime = target;
+}
+
+// ボタン wiring
+document.getElementById('back3').onclick = () => seek(-3);
+document.getElementById('fwd5').onclick  = () => seek(5);
+document.getElementById('fwd10').onclick = () => seek(10);
 </script>
 
 </body>
 </html>
+``
