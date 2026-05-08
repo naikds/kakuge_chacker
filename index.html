@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Video Viewer</title>
+</head>
+<body>
+
+<video id="player" controls width="100%"></video>
+
+<script src="video/index.js"></script>
+<script>
+const video = document.getElementById('player');
+
+if (window.videoList && videoList.length > 0) {
+  // 名前降順なので先頭＝最新
+  video.src = `video/${videoList[0]}`;
+}
+</script>
+
+</body>
+</html>
