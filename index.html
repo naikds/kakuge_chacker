@@ -38,23 +38,21 @@
 @media (orientation: landscape) {
   .overlay-controls {
     display: flex;
+    flex-wrap: nowrap;        /* 折り返さない */
+    gap: 6px;
 
     position: absolute;
     bottom: 10vh;
     left: 50%;
     transform: translateX(-50%);
 
-    gap: 6px;
-    flex-wrap: wrap;
-    justify-content: center;
-
     padding: 6px 8px;
     background: rgba(0, 0, 0, 0.45);
     border-radius: 8px;
     backdrop-filter: blur(2px);
-
     z-index: 10;
   }
+}
 
   .overlay-controls button {
     color: #fff;
