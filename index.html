@@ -20,12 +20,69 @@
       padding: 6px 12px;
       font-size: 14px;
     }
+    .video-wrapper {
+  position: relative;
+}
+
+#player {
+  width: 100%;
+  height: auto;
+}
+
+/* デフォルト（縦向き）：普通に下に表示 */
+.overlay-controls {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* 横向きのときだけオーバーレイ */
+@media (orientation: landscape) {
+  .overlay-controls {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    padding: 6px 8px;
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 8px;
+    backdrop-filter: blur(2px);
+  }
+
+  .overlay-controls button {
+    color: #fff;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+  }
+}
   </style>
 </head>
 <body>
+  
+<div class="video-wrapper">
+  <video id="player" controls preload="metadata"></video>
 
-<video id="player" controls width="100%" preload="metadata"></video>
+  <div class="overlay-controls">
+    <button id="prevVideo">◀</button>
+    <button id="togglePlay">⏯</button>
+    <button id="nextVideo">▶</button>
 
+    <button id="back10">-10</button>
+    <button id="back5">-5</button>
+    <button id="back3">-3</button>
+
+    <button id="fwd5">+5</button>
+    <button id="fwd10">+10</button>
+  </div>
+</div>
+  
 <div class="controls">
   <button id="prevVideo">前の動画</button>
   <button id="nextVideo">次の動画</button>
