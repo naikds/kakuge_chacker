@@ -17,8 +17,8 @@
       font-family: monospace;
     }
     button {
-      padding: 6px 12px;
-      font-size: 14px;
+  padding: 12px 18px;
+  font-size: 16px;
     }
     .video-wrapper {
   position: relative;
@@ -29,23 +29,21 @@
   height: auto;
 }
 
-/* デフォルト（縦向き）：普通に下に表示 */
+/* デフォルト（縦向き）：横向き用ボタン群は非表示 */
 .overlay-controls {
-  margin-top: 8px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  display: none;
 }
 
-/* 横向きのときだけオーバーレイ */
+/* 横向きのときだけ表示＆動画にオーバーレイ */
 @media (orientation: landscape) {
   .overlay-controls {
+    display: flex;
+
     position: absolute;
-    bottom: 8px;
+    bottom: 10vh;
     left: 50%;
     transform: translateX(-50%);
 
-    display: flex;
     gap: 6px;
     flex-wrap: wrap;
     justify-content: center;
@@ -54,6 +52,8 @@
     background: rgba(0, 0, 0, 0.45);
     border-radius: 8px;
     backdrop-filter: blur(2px);
+
+    z-index: 10;
   }
 
   .overlay-controls button {
